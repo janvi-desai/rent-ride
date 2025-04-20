@@ -1,35 +1,42 @@
-﻿@model IEnumerable<CarRentalSystem.Models.PaymentModel>
+﻿@model List<PaymentModel>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
 @{
     ViewData["Title"] = "Payments";
+    var isAdmin = User.IsInRole("Admin");
 }
 
-<h2>Payment History</h2>
-
-<table class="table table-bordered table-striped">
+<h2>Payments</h2>
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>Rental ID</th>
             <th>Amount</th>
             <th>Method</th>
             <th>Status</th>
             <th>Date</th>
-            <th>Actions</th>
+            <th>Rental ID</th>
+            @if (isAdmin)
+            {
+                <th>Actions</th>
+            }
         </tr>
     </thead>
     <tbody>
-        @foreach (var payment in Model)
+        @foreach (var p in Model)
         {
             <tr>
-                <td>@payment.RentalId</td>
-                <td>@payment.Amount.ToString("C")</td>
-                <td>@payment.PaymentMethod</td>
-                <td>@payment.Status</td>
-                <td>@payment.PaymentDate.ToShortDateString()</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@payment.Id" class="btn btn-info btn-sm">View</a>
-                    <a asp-action="Edit" asp-route-id="@payment.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@payment.Id" class="btn btn-danger btn-sm">Delete</a>
-                </td>
+                <td>@p.Amount</td>
+                <td>@p.PaymentMethod</td>
+                <td>@p.Status</td>
+                <td>@p.PaymentDate.ToString("dd MMM yyyy")</td>
+                <td>@p.RentalId</td>
+                @if (isAdmin)
+                {
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@p.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>

@@ -26,5 +26,6 @@ namespace CarRentalSystem.Models
 
         public string Status { get; set; } = "Pending";
         public decimal TotalAmount { get; set; }
+        public bool IsPaid { get; set; }
     }
 }

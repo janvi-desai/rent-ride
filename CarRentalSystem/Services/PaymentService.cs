@@ -7,42 +7,54 @@ namespace CarRentalSystem.Services
 {
     public class PaymentService : IPaymentService
     {
-        private readonly IPaymentRepository _paymentRepository;
+        private readonly IPaymentRepository _repository;
         private readonly IMapper _mapper;
 
-        public PaymentService(IPaymentRepository paymentRepository, IMapper mapper)
+        public PaymentService(IPaymentRepository repository, IMapper mapper)
         {
-            _paymentRepository = paymentRepository;
+            _repository = repository;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PaymentModel>> GetAllAsync()
+        public async Task<List<PaymentModel>> GetAllAsync()
         {
-            var payments = await _paymentRepository.GetAllAsync();
+            var payments = await _repository.GetAllAsync();
+            return _mapper.Map<List<PaymentModel>>(payments);
+        }
+
+        public async Task<List<PaymentModel>> GetByUserAsync(string userId)
+        {
+            var payments = await _repository.GetByUserIdAsync(userId);
             return _mapper.Map<List<PaymentModel>>(payments);
         }
 
         public async Task<PaymentModel?> GetByIdAsync(int id)
         {
-            var payment = await _paymentRepository.GetByIdAsync(id);
-            return _mapper.Map<PaymentModel>(payment);
+            var payment = await _repository.GetByIdAsync(id);
+            return payment != null ? _mapper.Map<PaymentModel>(payment) : null;
+        }
+
+        public async Task<PaymentModel?> GetByRentalIdAsync(int id)
+        {
+            var payment = await _repository.GetByRentalIdAsync(id);
+            return payment != null ? _mapper.Map<PaymentModel>(payment) : null;
         }
 
         public async Task AddAsync(PaymentModel model)
         {
-            var payment = _mapper.Map<Payment>(model);
-            await _paymentRepository.AddAsync(payment);
+            var entity = _mapper.Map<Payment>(model);
+            await _repository.AddAsync(entity);
         }
 
         public async Task UpdateAsync(PaymentModel model)
         {
-            var payment = _mapper.Map<Payment>(model);
-            await _paymentRepository.UpdateAsync(payment);
+            var entity = _mapper.Map<Payment>(model);
+            await _repository.UpdateAsync(entity);
         }
 
         public async Task DeleteAsync(int id)
         {
-            await _paymentRepository.DeleteAsync(id);
+            await _repository.DeleteAsync(id);
         }
     }
 }

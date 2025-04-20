@@ -13,9 +13,18 @@ namespace CarRentalSystem.Repositories
             _context = context;
         }
 
-        public async Task<List<Payment>> GetAllAsync() => await _context.Payments.ToListAsync();
+        public async Task<List<Payment>> GetAllAsync() =>
+            await _context.Payments.Include(p => p.Rental).ThenInclude(r => r.User).ToListAsync();
 
-        public async Task<Payment?> GetByIdAsync(int id) => await _context.Payments.FindAsync(id);
+        public async Task<List<Payment>> GetByUserIdAsync(string userId) =>
+            await _context.Payments.Include(p => p.Rental)
+                .Where(p => p.Rental.UserId == userId).ToListAsync();
+
+        public async Task<Payment?> GetByIdAsync(int id) =>
+            await _context.Payments.Include(p => p.Rental).FirstOrDefaultAsync(p => p.Id == id);
+        
+        public async Task<Payment?> GetByRentalIdAsync(int id) =>
+            await _context.Payments.Include(p => p.Rental).FirstOrDefaultAsync(p => p.RentalId == id);
 
         public async Task AddAsync(Payment payment)
         {
@@ -39,4 +48,5 @@ namespace CarRentalSystem.Repositories
             }
         }
     }
+
 }

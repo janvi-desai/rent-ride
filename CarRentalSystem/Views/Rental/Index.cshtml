@@ -1,18 +1,22 @@
 ﻿@model IEnumerable<CarRentalSystem.Models.RentalModel>
+
 @{
-    ViewData["Title"] = "All Rentals";
+    ViewData["Title"] = "My Rentals";
 }
-<h2>All Rentals</h2>
+
+<h2>My Rentals</h2>
+
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>Car ID</th>
-            <th>User ID</th>
             <th>Pickup</th>
             <th>Drop</th>
-            <th>Rent</th>
-            <th>Return</th>
+            <th>Rent Date</th>
+            <th>Return Date</th>
             <th>Status</th>
+            <th>Total Amount</th>
+            <th>Payment</th>
         </tr>
     </thead>
     <tbody>
@@ -20,12 +24,22 @@
         {
             <tr>
                 <td>@rental.CarId</td>
-                <td>@rental.UserId</td>
                 <td>@rental.PickupLocation</td>
                 <td>@rental.DropLocation</td>
                 <td>@rental.RentDate.ToShortDateString()</td>
                 <td>@rental.ReturnDate.ToShortDateString()</td>
                 <td>@rental.Status</td>
+                <td>₹@rental.TotalAmount</td>
+                <td>
+                    @if (!rental.IsPaid)
+                    {
+                        <span class="badge bg-danger">Not Paid</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Paid</span>
+                    }
+                </td>
             </tr>
         }
     </tbody>

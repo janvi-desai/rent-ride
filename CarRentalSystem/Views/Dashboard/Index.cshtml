@@ -1,54 +1,125 @@
-﻿@{
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+@{
     ViewData["Title"] = "Dashboard";
+
+    var rolesString = HttpContextAccessor.HttpContext.Session.GetString("UserRoles");
+    var roles = rolesString?.Split(',');
+    var isAdmin = roles?.Contains("Admin") ?? false;
+    var isUser = roles?.Contains("User") ?? false;
 }
 
-<div class="container">
-    <h2 class="mb-4">Welcome to CarRental System!</h2>
+<div class="container py-4">
+    <h2 class="mb-5 fw-bold text-primary">Welcome to <span class="text-dark">CarRental Dashboard</span></h2>
 
-    @if (User.IsInRole("Admin"))
+    @if (isAdmin)
     {
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card text-white bg-primary mb-3">
+        <div class="row g-4">
+            <!-- Dummy cards for Admin -->
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 bg-light h-100 text-center">
                     <div class="card-body">
-                        <h5 class="card-title">Manage Cars</h5>
-                        <p class="card-text">Add, edit, or delete car listings.</p>
-                        <a asp-controller="Car" asp-action="Index" class="btn btn-light">Manage</a>
+                        <i class="bi bi-car-front-fill display-5 text-primary mb-3"></i>
+                        <h5 class="card-title">Total Cars</h5>
+                        <p class="fs-4 fw-bold text-dark">35</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 bg-light h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-clock-history display-5 text-success mb-3"></i>
+                        <h5 class="card-title">Total Rentals</h5>
+                        <p class="fs-4 fw-bold text-dark">120</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 bg-light h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-cash-stack display-5 text-warning mb-3"></i>
+                        <h5 class="card-title">Revenue</h5>
+                        <p class="fs-4 fw-bold text-dark">$18,450</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 bg-light h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-exclamation-circle-fill display-5 text-danger mb-3"></i>
+                        <h5 class="card-title">Pending</h5>
+                        <p class="fs-4 fw-bold text-dark">7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary h-100 shadow">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-car-front-fill me-2"></i>Manage Cars</h5>
+                        <p>Add, edit, or delete car listings.</p>
+                        <a asp-controller="Car" asp-action="AdminIndex" class="btn btn-light w-100">Go to Cars</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card text-white bg-success mb-3">
+                <div class="card text-white bg-success h-100 shadow">
                     <div class="card-body">
-                        <h5 class="card-title">Rentals</h5>
-                        <p class="card-text">View all user bookings.</p>
-                        <a asp-controller="Rental" asp-action="Index" class="btn btn-light">View Rentals</a>
+                        <h5 class="card-title"><i class="bi bi-journal-check me-2"></i>View Rentals</h5>
+                        <p>Check all user bookings and activity.</p>
+                        <a asp-controller="Rental" asp-action="Index" class="btn btn-light w-100">View Rentals</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-dark h-100 shadow">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-gear-fill me-2"></i>System Settings</h5>
+                        <p>Manage configuration and rules.</p>
+                        <a asp-controller="SystemSetting" asp-action="Index" class="btn btn-light w-100">Settings</a>
                     </div>
                 </div>
             </div>
         </div>
     }
-    else if (User.IsInRole("User"))
+    else if (isUser)
     {
-        <div class="row">
+        <div class="row g-4">
             <div class="col-md-4">
-                <div class="card text-white bg-info mb-3">
+                <div class="card text-white bg-info h-100 shadow">
                     <div class="card-body">
-                        <h5 class="card-title">Browse Cars</h5>
-                        <p class="card-text">Choose cars to rent.</p>
-                        <a asp-controller="Car" asp-action="AvailableCars" class="btn btn-light">Browse</a>
+                        <h5 class="card-title"><i class="bi bi-search me-2"></i>Browse Cars</h5>
+                        <p>Explore and choose cars to rent.</p>
+                        <a asp-controller="Car" asp-action="Index" class="btn btn-light w-100">Browse Cars</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card text-white bg-warning mb-3">
+                <div class="card text-dark bg-warning h-100 shadow">
                     <div class="card-body">
-                        <h5 class="card-title">My Rentals</h5>
-                        <p class="card-text">Track your active and past rentals.</p>
-                        <a asp-controller="Rental" asp-action="MyRentals" class="btn btn-light">View</a>
+                        <h5 class="card-title"><i class="bi bi-clock-history me-2"></i>My Rentals</h5>
+                        <p>Track your current and past rentals.</p>
+                        <a asp-controller="Rental" asp-action="MyRentals" class="btn btn-dark w-100">My Rentals</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-danger h-100 shadow">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-wallet2 me-2"></i>My Payments</h5>
+                        <p>View payment status and history.</p>
+                        <a asp-controller="Payment" asp-action="MyPayments" class="btn btn-light w-100">My Payments</a>
                     </div>
                 </div>
             </div>
         </div>
     }
 </div>
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />

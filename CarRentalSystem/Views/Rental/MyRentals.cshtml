@@ -12,6 +12,8 @@
             <th>Rent Date</th>
             <th>Return Date</th>
             <th>Status</th>
+            <th>Total Amount</th>
+            <th>Payment</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -25,6 +27,17 @@
                 <td>@rental.RentDate.ToShortDateString()</td>
                 <td>@rental.ReturnDate.ToShortDateString()</td>
                 <td>@rental.Status</td>
+                <td>₹@rental.TotalAmount.ToString("F2")</td>
+                <td>
+                    @if (rental.IsPaid)
+                    {
+                        <span class="badge bg-success">Paid</span>
+                    }
+                    else
+                    {
+                        <a asp-controller="Payment" asp-action="Create" asp-route-rentalId="@rental.Id" class="btn btn-sm btn-primary">Make Payment</a>
+                    }
+                </td>
                 <td>
                     @if (rental.Status == "Pending")
                     {

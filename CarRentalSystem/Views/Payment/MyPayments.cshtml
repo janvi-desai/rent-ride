@@ -1,0 +1,46 @@
+﻿@model IEnumerable<CarRentalSystem.Models.PaymentModel>
+@{
+    ViewData["Title"] = "My Payments";
+}
+
+<h2 class="mb-4">My Payments</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You haven't made any payments yet.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Rental ID</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Payment Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var payment in Model)
+            {
+                <tr>
+                    <td>@payment.RentalId</td>
+                    <td>₹@payment.Amount.ToString("F2")</td>
+                    <td>@payment.PaymentMethod</td>
+                    <td>
+                        @if (payment.Status == "Completed")
+                        {
+                            <span class="badge bg-success">Completed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">@payment.Status</span>
+                        }
+                    </td>
+                    <td>@payment.PaymentDate.ToString("dd MMM yyyy, hh:mm tt")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
